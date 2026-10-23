@@ -218,6 +218,7 @@ legend{padding:0}
 .field--age .input{max-width:170px}
 .cgrid{display:grid;grid-template-columns:1fr;gap:12px}
 @media (min-width:430px){.cgrid{grid-template-columns:1fr 1fr}}
+@media (min-width:430px){.cgrid .cfield:first-child{grid-column:1/-1}}
 .clabel{display:flex;align-items:center;gap:7px;margin:0 0 5px;font-weight:700;font-size:16px;color:var(--ink)}
 .rec{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--red);color:#fff;border-radius:3px;padding:2px 5px 1px}
 .at{position:relative}
@@ -481,7 +482,7 @@ legend{padding:0}
 
             <div class="field" data-field="contact">
               <p class="label">Cum te contactăm? <span class="req" aria-hidden="true">*</span><span class="opt">măcar unul</span></p>
-              <p class="hint hint--top">Cel mai simplu e telefonul, dar merge și Instagram, Telegram sau TikTok.</p>
+              <p class="hint hint--top">Cel mai simplu e telefonul, dar merge și Instagram sau Telegram.</p>
               <div class="cgrid">
                 <div class="cfield">
                   <label class="clabel" for="telefon">Telefon / WhatsApp <span class="rec">recomandat</span></label>
@@ -494,10 +495,6 @@ legend{padding:0}
                 <div class="cfield">
                   <label class="clabel" for="telegram">Telegram</label>
                   <div class="at"><span aria-hidden="true">@</span><input class="input" id="telegram" name="telegram" maxlength="80" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="username"></div>
-                </div>
-                <div class="cfield">
-                  <label class="clabel" for="tiktok">TikTok</label>
-                  <div class="at"><span aria-hidden="true">@</span><input class="input" id="tiktok" name="tiktok" maxlength="80" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="numele.tău"></div>
                 </div>
               </div>
               <p class="err" id="e-contact">Lasă cel puțin un contact — numărul de telefon e cel mai simplu.</p>
@@ -527,10 +524,6 @@ legend{padding:0}
               <p class="err" id="e-gen">Alege genul principal.</p>
             </div>
             <div class="field">
-              <p class="label" id="l-cum">Cum cânți? <span class="opt">opțional · mai multe</span></p>
-              <div class="tags" id="g-cum" role="group" aria-labelledby="l-cum"></div>
-            </div>
-            <div class="field">
               <p class="label" id="l-voce">Cânți și cu vocea? <span class="opt">opțional</span></p>
               <div class="tags" id="g-voce" role="radiogroup" aria-labelledby="l-voce"></div>
             </div>
@@ -542,18 +535,8 @@ legend{padding:0}
               <p class="label" id="l-echip">Echipament <span class="opt">opțional · mai multe</span></p>
               <div class="tags" id="g-echip" role="group" aria-labelledby="l-echip"></div>
             </div>
-            <div class="field">
-              <p class="label" id="l-disp">Când poți repeta? <span class="opt">opțional · mai multe</span></p>
-              <div class="tags" id="g-disp" role="group" aria-labelledby="l-disp"></div>
-            </div>
 
             <h3 class="step"><b>04</b>Ultimul pas</h3>
-            <div class="field" data-field="link">
-              <label class="label" for="link">Un video cu tine cântând <span class="opt">opțional</span></label>
-              <input class="input" id="link" name="link" type="url" inputmode="url" maxlength="300" placeholder="link YouTube / Instagram / TikTok">
-              <p class="err" id="e-link">Linkul pare incomplet.</p>
-            </div>
-
             <div class="field" data-field="despre">
               <label class="label" for="despre">Despre tine <span class="opt">opțional</span></label>
               <span class="counter" id="counter" aria-hidden="true">0/600</span>
@@ -663,11 +646,9 @@ legend{padding:0}
     genuri: { type: "checkbox", star: ["Pop","Pop-rock","Rock"],
       opts: ["Pop","Pop-rock","Rock","Hard rock","Metal","Punk / Pop-punk","Indie / Alternative","Blues",
              "Funk / Soul","Jazz","Folk / Etno","Electronic","Rap / Hip-hop","Clasică"] },
-    cum:   { type: "checkbox", opts: ["După ureche","Citesc partituri","Citesc tabulaturi","Știu teorie muzicală","Improvizez","Compun piese proprii","Fac aranjamente"] },
-    voce:  { type: "radio",    opts: ["Nu","Backing vocals","Pot fi solist vocal"] },
+    voce:  { type: "radio",    opts: ["Nu","Backing vocals"] },
     scena: { type: "checkbox", opts: ["Am cântat într-o trupă","Am cântat pe scenă","Am înregistrat în studio","Cânt la evenimente / nunți","Școală / studii de muzică","Autodidact"] },
-    echip: { type: "checkbox", opts: ["Am instrumentul meu","Am amplificator / combo","Am efecte / procesor","Am in-ear / căști","Pot înregistra acasă","Am mașină pentru transport"] },
-    disp:  { type: "checkbox", opts: ["Luni–Vineri seara","Luni–Vineri ziua","Sâmbătă","Duminică"] }
+    echip: { type: "checkbox", opts: ["Am instrumentul meu","Am amplificator / combo","Am efecte / procesor","Am mașină pentru transport"] }
   };
 
   var $ = function(id){ return document.getElementById(id); };
@@ -808,10 +789,10 @@ legend{padding:0}
   });
   var despre = $("despre");
   despre.addEventListener("input", function(){ $("counter").textContent = despre.value.length + "/600"; });
-  ["prenume","nume","varsta","link"].forEach(function(id){
+  ["prenume","nume","varsta"].forEach(function(id){
     $(id).addEventListener("input", function(){ setInvalid(id, false); });
   });
-  ["telefon","instagram","telegram","tiktok"].forEach(function(id){
+  ["telefon","instagram","telegram"].forEach(function(id){
     $(id).addEventListener("input", function(){ setInvalid("contact", false); });
   });
   // „https://instagram.com/ion.drums/?hl=ro” → „ion.drums”
@@ -821,7 +802,7 @@ legend{padding:0}
     v = v.split(/[/?#\s]/)[0].replace(/^@+/, "");
     return v;
   }
-  ["instagram","telegram","tiktok"].forEach(function(id){
+  ["instagram","telegram"].forEach(function(id){
     $(id).addEventListener("blur", function(){ var h = handle($(id).value); if (h !== $(id).value) $(id).value = h; });
     $(id).addEventListener("input", function(){ var v = $(id).value; if (/^@/.test(v)) $(id).value = v.replace(/^@+/, ""); });
   });
@@ -853,7 +834,7 @@ legend{padding:0}
     if (!(age >= 14 && age <= 70)) bad("varsta", ageInput); else setInvalid("varsta", false);
 
     var tel = $("telefon").value.trim(), d = phoneDigits(tel);
-    var handles = ["instagram","telegram","tiktok"].map(function(id){ return handle($(id).value); });
+    var handles = ["instagram","telegram"].map(function(id){ return handle($(id).value); });
     var e = $("e-contact");
     if (tel && (d.length < 8 || d.length > 15)) { e.textContent = "Numărul de telefon pare incomplet."; bad("contact", $("telefon")); }
     else if (handles.some(function(h){ return h && !/^[\w.]{2,40}$/.test(h); })) { e.textContent = "Un nume de utilizator are caractere ciudate — scrie doar numele, fără spații."; bad("contact", $("instagram")); }
@@ -874,8 +855,6 @@ legend{padding:0}
     if (!vals(form, "genuri").length) bad("genuri", $("g-genuri")); else setInvalid("genuri", false);
     if (vals(form, "genuri").length >= 2 && !val(form, "gen")) bad("gen", $("g-gen")); else setInvalid("gen", false);
 
-    var link = $("link").value.trim();
-    if (link && !/^(https?:\/\/)?[^\s.]+\.[^\s]{2,}/i.test(link) && !/^@[\w.]{2,}$/.test(link)) bad("link", $("link")); else setInvalid("link", false);
 
     if (!$("consent").checked) bad("consent", $("consent")); else setInvalid("consent", false);
 
@@ -901,7 +880,7 @@ legend{padding:0}
     params.set("nume", cleanName($("nume").value));
     params.set("varsta", String(parseInt(ageInput.value, 10)));
     params.set("telefon", $("telefon").value.trim());
-    ["instagram","telegram","tiktok"].forEach(function(id){ params.set(id, handle($(id).value)); });
+    ["instagram","telegram"].forEach(function(id){ params.set(id, handle($(id).value)); });
     var keys = chosen();
     params.set("instr", keys.join("|"));
     keys.forEach(function(k){
@@ -913,11 +892,10 @@ legend{padding:0}
       if (I.skills) params.set("teh_" + k, vals(c, "teh_" + k).join("|"));
       if (I.custom) params.set("alt_nume", cleanName(c.querySelector("[data-alt]").value));
     });
-    ["genuri","cum","scena","echip","disp"].forEach(function(g){ params.set(g, vals(form, g).join("|")); });
+    ["genuri","scena","echip"].forEach(function(g){ params.set(g, vals(form, g).join("|")); });
     params.set("voce", val(form, "voce"));
     params.set("gen", mainGenre());
     params.set("vid", visitorId());
-    params.set("link", $("link").value.trim());
     params.set("despre", despre.value.trim());
     params.set("sursa", getSource());
     params.set("t", String(Math.round((Date.now() - startedAt) / 1000)));
@@ -981,8 +959,7 @@ legend{padding:0}
     $("passNo").textContent = "NR. " + String(id || Math.floor(Math.random()*9000)+1000).padStart(4, "0");
     var how = $("telefon").value.trim() ? "te sunăm sau îți scriem pe WhatsApp la " + $("telefon").value.trim()
       : handle($("instagram").value) ? "îți scriem pe Instagram (@" + handle($("instagram").value) + ")"
-      : handle($("telegram").value) ? "îți scriem pe Telegram (@" + handle($("telegram").value) + ")"
-      : "îți scriem pe TikTok (@" + handle($("tiktok").value) + ")";
+      : "îți scriem pe Telegram (@" + handle($("telegram").value) + ")";
     $("doneText").textContent = "Mersi, " + prenume + "! Am primit aplicația ta — " + how + " ca să stabilim audiția.";
     var sheet = $("aplica");
     sheet.classList.add("is-done");
